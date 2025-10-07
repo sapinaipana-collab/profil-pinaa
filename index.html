@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart-Grid | Unit Produksi TKJ</title>
+    <!-- Memuat Tailwind CSS dari CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menggunakan font monospace untuk kesan cyberpunk/kode */
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+        /* Variabel CSS untuk kemudahan perubahan warna */
+        :root {
+            --bg-dark: #0f172a; /* Slate 900 */
+            --accent-neon: #a3e635; /* Lime 400 */
+            --accent-glow: 0 0 10px rgba(163, 230, 53, 0.7), 0 0 20px rgba(163, 230, 53, 0.3);
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: var(--bg-dark);
+            color: #e2e8f0; /* White/Light Slate */
+            overflow-x: hidden;
+        }
+
+        /* Styling Kartu Layanan */
+        .service-card {
+            /* Membuat border yang terlihat bercahaya */
+            border: 1px solid var(--accent-neon);
+            box-shadow: var(--accent-glow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.03); /* Sedikit transparan */
+            backdrop-filter: blur(5px);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 15px var(--accent-neon);
+        }
+
+        /* Styling Tombol CTA */
+        .btn-neon {
+            background-color: var(--accent-neon);
+            color: var(--bg-dark);
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: var(--accent-glow);
+            transition: all 0.3s ease;
+        }
+
+        .btn-neon:hover {
+            background-color: #d9f99d; /* Lime 200 */
+            box-shadow: 0 0 20px var(--accent-neon), 0 0 40px rgba(163, 230, 53, 0.5);
+        }
+
+        /* Styling Navigasi Aktif */
+        .nav-link.active {
+            color: var(--accent-neon);
+            text-shadow: 0 0 5px var(--accent-neon);
+        }
+
+        /* Typing Effect Cursor */
+        .typing-cursor {
+            border-right: .15em solid var(--accent-neon); /* Cursor */
+            animation: blink-caret .75s step-end infinite;
+        }
+
+        /* Animasi Cursor */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--accent-neon) }
+        }
+
+        /* Grid Background Overlay (Opsional untuk efek lebih futuristik) */
+        .bg-grid {
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <!-- Tailwind Configuration (hanya untuk memastikan Space Mono dan warna kustom dimuat) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon': 'var(--accent-neon)',
+                        'dark-bg': 'var(--bg-dark)',
+                    },
+                    fontFamily: {
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-dark-bg/90 backdrop-blur-sm shadow-xl shadow-neon/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-neon tracking-wider shadow-neon" style="text-shadow: 0 0 5px var(--accent-neon);">SMART-GRID</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#hero" class="nav-link text-sm uppercase hover:text-neon transition duration-300 active">Home</a>
+                <a href="#services" class="nav-link text-sm uppercase hover:text-neon transition duration-300">Services</a>
+                <a href="#stats" class="nav-link text-sm uppercase hover:text-neon transition duration-300">Data</a>
+                <a href="#contact" class="nav-link text-sm uppercase hover:text-neon transition duration-300">Contact</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-neon focus:outline-none">
+                <!-- Ikon Burger Menu (Inline SVG) -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden absolute w-full bg-dark-bg/95 shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#hero" class="nav-link block px-3 py-2 text-base font-medium text-neon active">Home</a>
+                <a href="#services" class="nav-link block px-3 py-2 text-base font-medium hover:text-neon">Services</a>
+                <a href="#stats" class="nav-link block px-3 py-2 text-base font-medium hover:text-neon">Data</a>
+                <a href="#contact" class="nav-link block px-3 py-2 text-base font-medium hover:text-neon">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-[80vh] flex items-center justify-center pt-24 pb-16 overflow-hidden">
+        <div class="bg-grid"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10 p-6">
+            <span class="text-neon text-lg uppercase tracking-widest block mb-4">Unit Produksi TKJ</span>
+            <h1 class="text-5xl sm:text-7xl font-bold mb-6 leading-tight">
+                <span id="typing-text" class="text-white"></span><span class="typing-cursor">|</span>
+            </h1>
+            <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+                Kode, Jaringan, dan Solusi. Kami adalah tim elit siswa yang membangun masa depan digital Anda.
+            </p>
+            <a href="#services" class="btn-neon inline-block py-3 px-8 rounded-lg shadow-2xl">
+                MULAI PROYEK ANDA &gt;
+            </a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-dark-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-16 text-white uppercase tracking-wider">Layanan Inti</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Card 1: Perbaikan -->
+                <div class="service-card p-6 rounded-xl hover:shadow-neon/50">
+                    <svg class="w-10 h-10 text-neon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.82 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.82 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.82-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.82-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2 text-white">SYSTEM REPAIR</h3>
+                    <p class="text-gray-400 text-sm">Diagnosis & perbaikan PC/Laptop. Mulai dari OS error hingga penggantian komponen kritis.</p>
+                </div>
+                
+                <!-- Card 2: Jaringan -->
+                <div class="service-card p-6 rounded-xl hover:shadow-neon/50">
+                    <svg class="w-10 h-10 text-neon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 4v-4z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2 text-white">NETWORK SETUP</h3>
+                    <p class="text-gray-400 text-sm">Instalasi & konfigurasi jaringan LAN/WLAN. Kecepatan dan keamanan terjamin (Mikrotik ready).</p>
+                </div>
+
+                <!-- Card 3: Web Dev -->
+                <div class="service-card p-6 rounded-xl hover:shadow-neon/50">
+                    <svg class="w-10 h-10 text-neon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2 text-white">WEB DEVELOPMENT</h3>
+                    <p class="text-gray-400 text-sm">Pembuatan landing page profil, portofolio, atau event. Modern, responsif, dan SEO-friendly.</p>
+                </div>
+
+                <!-- Card 4: Konsultasi -->
+                <div class="service-card p-6 rounded-xl hover:shadow-neon/50">
+                    <svg class="w-10 h-10 text-neon mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M4.707 5.636l-.707.707M21 12h-1M4 12H3m3.343 7.343l-.707.707M19.071 19.071l-.707-.707M17 12a5 5 0 11-10 0 5 5 0 0110 0z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-2 text-white">TECH CONSULTANCY</h3>
+                    <p class="text-gray-400 text-sm">Konsultasi gratis untuk upgrade PC, pembelian perangkat baru, dan solusi keamanan data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats/Why Us Section -->
+    <section id="stats" class="py-20 bg-dark-bg/80 border-t border-b border-neon/20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold text-neon mb-12 uppercase tracking-wider">Mengapa Memilih Smart-Grid?</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-10">
+                <div class="p-4">
+                    <div class="text-5xl font-bold text-white shadow-neon" style="text-shadow: var(--accent-glow);">99%</div>
+                    <p class="text-gray-400 mt-2">Success Rate</p>
+                </div>
+                <div class="p-4">
+                    <div class="text-5xl font-bold text-white shadow-neon" style="text-shadow: var(--accent-glow);">Harga Pelajar</div>
+                    <p class="text-gray-400 mt-2">Biaya Servis Termurah</p>
+                </div>
+                <div class="p-4">
+                    <div class="text-5xl font-bold text-white shadow-neon" style="text-shadow: var(--accent-glow);">GARANSI</div>
+                    <p class="text-gray-400 mt-2">Didukung Pengawasan Guru</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact Bar (Futuristic) -->
+    <footer id="contact" class="bg-dark-bg text-gray-500 py-6 border-t-2 border-neon/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
+            <p class="order-2 md:order-1 mt-4 md:mt-0 font-light">&copy; <span id="year"></span> SMART-GRID // Unit Produksi TKJ</p>
+            <div class="order-1 md:order-2 flex space-x-6 text-neon font-semibold">
+                <!-- Data Kontak menggunakan style monospace -->
+                <a href="mailto:smartgrid.tkj@sekolah.sch.id" class="hover:underline">email:smartgrid.tkj</a>
+                <a href="https://wa.me/6281234567890" target="_blank" class="hover:underline">wa:0812.345.678</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript untuk Typing Effect & Menu Mobile -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Footer Year
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // 2. Typing Effect for Hero Title
+            const typingTextElement = document.getElementById('typing-text');
+            const phrases = [
+                "WE BUILD.", 
+                "WE REPAIR.", 
+                "WE CONNECT.", 
+                "SMART-GRID."
+            ];
+            let phraseIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typingSpeed = 150;
+
+            function type() {
+                const currentPhrase = phrases[phraseIndex];
+                
+                if (isDeleting) {
+                    typingTextElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                    charIndex--;
+                    typingSpeed = 75; // Kecepatan menghapus
+                } else {
+                    typingTextElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                    charIndex++;
+                    typingSpeed = 150; // Kecepatan mengetik
+                }
+
+                if (!isDeleting && charIndex === currentPhrase.length) {
+                    // Selesai mengetik, tunggu sebentar sebelum menghapus
+                    isDeleting = true;
+                    typingSpeed = 2000; // Jeda 2 detik
+                } else if (isDeleting && charIndex === 0) {
+                    // Selesai menghapus, pindah ke frasa berikutnya
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    typingSpeed = 300; // Jeda pendek sebelum mengetik frasa baru
+                }
+
+                const newDelay = isDeleting ? typingSpeed / 2 : typingSpeed;
+                setTimeout(type, newDelay);
+            }
+
+            type(); // Mulai efek mengetik
+
+            // 3. Mobile Menu Toggle
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Tutup menu saat link diklik (terutama di mobile)
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!mobileMenu.classList.contains('hidden')) {
+                         mobileMenu.classList.add('hidden');
+                    }
+                    // Mengubah status active link
+                    navLinks.forEach(n => n.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+
+            // Set link aktif berdasarkan hash saat load
+             if (window.location.hash) {
+                const targetLink = document.querySelector(`.nav-link[href="${window.location.hash}"]`);
+                if (targetLink) {
+                    navLinks.forEach(n => n.classList.remove('active'));
+                    targetLink.classList.add('active');
+                }
+            } else {
+                 // Jika tidak ada hash, anggap Hero/Home yang aktif
+                document.querySelector('.nav-link[href="#hero"]').classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
+
